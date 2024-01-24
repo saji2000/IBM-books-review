@@ -8,16 +8,17 @@ public_users.post("/register", (req, res) => {
   //Write your code here
   const password = req.body.password;
   const username = req.body.username;
+  console.log("here");
 
   if (!username || !password) {
     return res
       .status(400)
       .json({ message: "Username and password cannot be empty" });
   }
-  if (users[username]) {
+  if (users.find((user) => user.username === username)) {
     return res.status(409).json({ message: "Username is already taken" });
   }
-  users[username] = password;
+  users.push({ username, password });
 
   return res.status(200).json({ message: "user registered" });
 });
