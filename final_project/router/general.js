@@ -6,7 +6,20 @@ const public_users = express.Router();
 
 public_users.post("/register", (req, res) => {
   //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  const password = req.body.password;
+  const username = req.body.username;
+
+  if (!username || !password) {
+    return res
+      .status(400)
+      .json({ message: "Username and password cannot be empty" });
+  }
+  if (users[username]) {
+    return res.status(409).json({ message: "Username is already taken" });
+  }
+  users[username] = password;
+
+  return res.status(200).json({ message: "user registered" });
 });
 
 // Get the book list available in the shop
@@ -29,20 +42,47 @@ public_users.get("/isbn/:isbn", function (req, res) {
 
 // Get book details based on author
 public_users.get("/author/:author", function (req, res) {
-  //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  const authorName = req.params.author;
+  const booksByAuthor = Object.values(books).filter(
+    (book) => book.author.toLowerCase() === authorName.toLowerCase()
+  );
+
+  if (booksByAuthor.length > 0) {
+    return res.status(200).json(booksByAuthor);
+  } else {
+    return res.status(404).json({ message: "No books found by this author" });
+  }
 });
 
-// Get all books based on title
 public_users.get("/title/:title", function (req, res) {
-  //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  const title = req.params.title;
+  const booksByTitle = Object.values(books).filter((book) =>
+    book.title.toLowerCase().includes(title.toLowerCase())
+  );
+
+  if (booksByTitle.length > 0) {
+    return res.status(200).json(booksByTitle);
+  } else {
+    return res.status(404).json({ message: "No books found with this title" });
+  }
 });
 
 //  Get book review
 public_users.get("/review/:isbn", function (req, res) {
-  //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  const isbn = req.params.isbn;
+  const book = books[isbn];
+
+  if (book) {
+    if (Object.keys(book.reviews).length === 0) {
+      // If reviews object is empty, send a custom message
+      return res.status(200).json({ message: "No reviews available" });
+    } else {
+      // Return the reviews if they exist
+      return res.status(200).json(book.reviews);
+    }
+  } else {
+    return res.status(404).json({ message: "Book not found" });
+  }
 });
 
 module.exports.general = public_users;
