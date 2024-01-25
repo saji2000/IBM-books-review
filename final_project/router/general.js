@@ -8,7 +8,6 @@ public_users.post("/register", (req, res) => {
   //Write your code here
   const password = req.body.password;
   const username = req.body.username;
-  console.log("here");
 
   if (!username || !password) {
     return res
