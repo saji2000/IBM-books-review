@@ -52,11 +52,26 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
 
   if (user && book) {
     book.reviews[username] = review;
-    return res.status(200).send(books);
+    return res.status(200).send(book.reviews);
   }
   return res
     .status(300)
     .json({ message: "Either username or book do not exist" });
+});
+
+// Delete a book review
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+  const isbn = req.params.isbn;
+  const username = req.body.username;
+  const book = books[isbn];
+
+  if (book && book.reviews && book.reviews[username]) {
+    delete book.reviews[username];
+    return res.status(200).send(books);
+  }
+  return res
+    .status(404)
+    .json({ message: "Either book or review do not exist" });
 });
 
 module.exports.authenticated = regd_users;
