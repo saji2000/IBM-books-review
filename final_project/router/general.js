@@ -109,10 +109,8 @@ public_users.get("/review/:isbn", function (req, res) {
 
   if (book) {
     if (Object.keys(book.reviews).length === 0) {
-      // If reviews object is empty, send a custom message
       return res.status(200).json({ message: "No reviews available" });
     } else {
-      // Return the reviews if they exist
       return res.status(200).json(book.reviews);
     }
   } else {
