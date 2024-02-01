@@ -52,7 +52,9 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
 
   if (user && book) {
     book.reviews[username] = review;
-    return res.status(200).send(book.reviews);
+    return res.status(200).json({
+      message: `review for the book item with isbn ${isbn} has been added.`,
+    });
   }
   return res
     .status(300)
@@ -67,7 +69,9 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
 
   if (book && book.reviews && book.reviews[username]) {
     delete book.reviews[username];
-    return res.status(200).send(books);
+    return res.status(200).json({
+      message: `review for the book item with isbn ${isbn} posted by user ${username} has been deleted.`,
+    });
   }
   return res
     .status(404)
